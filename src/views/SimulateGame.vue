@@ -9,6 +9,9 @@
     <div v-if="sevenCards.length > 2" class="second">
         <img v-for="card in sevenCards.slice(2,7)" :key="card.name" :src=card.url class="boardCards">
     </div>
+    <div id="chart">
+        <ChanceChart :chartData="state.chartData" :chartOptions="state.chartOptions"/>
+    </div>
   </div>
   <br>
 
@@ -43,9 +46,8 @@
     </div>
   </div>
 
-<button @click="findStrongest">Gomb</button>
+<button @click="backend">Gomb</button>
 <button @click="createEnemysPossibleCards">Teszt</button>
-
 
 </template>
 
@@ -53,10 +55,12 @@
 import Navigation from "../components/Navigation.vue";
 import firebase from 'firebase/app';
 let G = require('generatorics');
+import ChanceChart from '../components/ChanceChart.vue'
 
 export default {
   components: {
     Navigation,
+    ChanceChart
   },
 
   data() {
@@ -67,7 +71,7 @@ export default {
       isThere: 0,
       cardsFull: false,
       cards: [
-        { id: 1, url: 'https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/2_of_clubs.png', name: '2C'},
+        { id: 1, url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/2_of_clubs.png", name: '2C'},
         { id: 2, url: 'https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/3_of_clubs.png', name: '3C'},
         { id: 3, url: 'https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/4_of_clubs.png', name: '4C'},
         { id: 4, url: 'https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/5_of_clubs.png', name: '5C'},
@@ -125,6 +129,27 @@ export default {
       strenghtOrder : [],
       enemysCards : [],
       notInTheDeck : [],
+      state: {
+        chartData: {
+          datasets: [
+            {
+              label: "Enemy's Chance",
+              borderColor: '#1161ed',
+              data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 41, 190]
+            },
+            {
+              label: 'My Chance',
+              borderColor: '#f87979',
+              color: '#fff',
+              data: [60,60,60,60,60,60,60,60,60,60,60,60, 60]
+            }
+          ],
+          labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'],
+        },
+        chartOptions: {
+          responsive: false
+        }
+      }
     }
   },
 
@@ -151,101 +176,10 @@ export default {
       this.isThere = 9;
       this.isHidden = !this.isHidden;
     },
-    createCombinations(){
-      let onlyName = []
-      let allCombinations = []
-      for (let card of this.sevenCards){
-        onlyName.push(card.name)
-      }
-      for (let comb of G.combination(onlyName, 5)){
-        allCombinations.push(comb.slice());
-      }
-      return allCombinations;
-    },
-    findStrongest(){
-      let combinations = this.createCombinations();
-      let combinationsName = []
-      let ordered = "";
-      let result = [];
-      for(let combination of combinations){
-        let nameString = "";
-        let colors = {'C': 0, 'S': 0, 'H':0, 'D':0};
-        for(let card of combination){
-          nameString += card[0];
-          colors[card[1]]+=1
-        }
-        ordered = this.sortCardOrder(nameString, colors);
-        combinationsName.push(ordered);
-        result.push(this.strenghtOrder[ordered]);
-      }
-      console.log(Math.min(...result));
-    },
-    sortCardOrder(string, colors){
-      let ordered = "";
-      let timesArray = [(string.match(/A/g) || []).length,
-                        (string.match(/K/g) || []).length,
-                        (string.match(/Q/g) || []).length,
-                        (string.match(/J/g) || []).length,
-                        (string.match(/T/g) || []).length,
-                        (string.match(/9/g) || []).length,
-                        (string.match(/8/g) || []).length,
-                        (string.match(/7/g) || []).length,
-                        (string.match(/6/g) || []).length,
-                        (string.match(/5/g) || []).length,
-                        (string.match(/4/g) || []).length,
-                        (string.match(/3/g) || []).length,
-                        (string.match(/2/g) || []).length,]
-      for(let i = 0; i<timesArray[0];i++){
-        ordered+='A';
-      }
-      for(let i = 0; i<timesArray[1];i++){
-        ordered+='K';
-      }
-      for(let i = 0; i<timesArray[2];i++){
-        ordered+='Q';
-      }
-      for(let i = 0; i<timesArray[3];i++){
-        ordered+='J';
-      }
-      for(let i = 0; i<timesArray[4];i++){
-        ordered+='T';
-      }
-      for(let i = 0; i<timesArray[5];i++){
-        ordered+='9';
-      }
-      for(let i = 0; i<timesArray[6];i++){
-        ordered+='8';
-      }
-      for(let i = 0; i<timesArray[7];i++){
-        ordered+='7';
-      }
-      for(let i = 0; i<timesArray[8];i++){
-        ordered+='6';
-      }
-      for(let i = 0; i<timesArray[9];i++){
-        ordered+='5';
-      }
-      for(let i = 0; i<timesArray[10];i++){
-        ordered+='4';
-      }
-      for(let i = 0; i<timesArray[11];i++){
-        ordered+='3';
-      }
-      for(let i = 0; i<timesArray[12];i++){
-        ordered+='2';
-      }
-
-      if(colors['C'] == 5){
-        ordered+='F'
-      } else if(colors['H'] == 5){
-        ordered+='F'
-      } else if(colors['S'] == 5){
-        ordered+='F'
-      } else if(colors['D'] == 5){
-        ordered+='F'
-      }
-
-      return(ordered)
+    backend(e){
+      e.preventDefault();
+      fetch('http://localhost:5000/strongest', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({cards: this.sevenCards})})
+      .then(() => {console.log('Sucessfull Post')})
     },
     getAllCombinationsData(){
       firebase
@@ -265,18 +199,32 @@ export default {
     },
     createEnemysPossibleCards() {
       let help = [];
+      let help2 = [];
+      let eCombination = [];
       let cards = this.cards;
+      // let result = [];
       for(let card of cards){
         if(card.name != null){
-          help.push(card.name)
+          help.push(card.name);
         }
       }
-      console.log(help)
-      let allCombinations = []
+      let allCombinations = [];
       for (let comb of G.combination(help, 2)){
         allCombinations.push(comb.slice());
       }
-      console.log(allCombinations)
+      for(let card of this.sevenCards){
+        help2.push(card.name);
+      }
+      for(let comb of allCombinations){
+        eCombination.push(comb.concat(help2.slice(2,7)));
+      }
+      // console.log(eCombination)
+      // for(let comb of eCombination){
+      //   result.push(this.findStrongest(comb));
+      //   console.log(this.findStrongest(comb));
+      // }
+      console.log(this.findStrongest(eCombination))
+      
     }
     },
     mounted(){

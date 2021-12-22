@@ -23,11 +23,6 @@ const routes = [
     component: () => import('../views/Register.vue')
   },
   {
-    path: '/randomgame',
-    name: 'RandomGame',
-    component: () => import('../views/RandomGame.vue')
-  },
-  {
     path: '/simulategame',
     name: 'SimulateGame',
     component: () => import('../views/SimulateGame.vue')

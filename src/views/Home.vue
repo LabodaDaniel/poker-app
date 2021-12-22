@@ -44,14 +44,12 @@ p {
   color: #eff2fa;
   padding-top: 75px;
   text-align: justify;
-  line-height: 20px;
-}
-
-p:first-letter { 
-  color: #e35b5a;
-  font-size: 75px;
-  line-height: 60px;
-  padding: 0 8px;
+  line-height: 30px;
+  background-color: black;
+  padding: 0.5rem;
+  
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 
 .flex-container {
@@ -71,6 +69,11 @@ h2 {
   font-family: "Open Sans";
   text-transform: uppercase;
   color: #e35b5a;
+  background-color: black;
+}
+
+html {
+  overflow: hidden;
 }
 
 </style>

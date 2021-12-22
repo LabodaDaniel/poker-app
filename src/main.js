@@ -3,6 +3,12 @@ import App from './App.vue'
 import router from './router'
 import firebase from 'firebase'
 import "firebase/firestore";
+import Chartkick from 'vue-chartkick';
+import { Chart } from 'chart.js';
+import { Vue } from 'vue';
+
+
+Vue?.use(Chartkick.use(Chart));
 
 const firebaseConfig = {
     apiKey: "AIzaSyANClDMGn18RLgjFvPRf22XZ8H4mHeNoUU",

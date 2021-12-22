@@ -1,17 +1,11 @@
 <template>
-  <header>
-    <nav>
-      <ul>
-        <li><router-link to="/">Home</router-link></li>
-        <!-- <li><router-link to="/randomgame">Random Game</router-link></li> -->
-        <li><router-link to="/simulategame">Simulate Game</router-link></li>
-        <li @click="Logout" class="pos"><router-link to="/login">Logout</router-link></li>
-        <p class="nickname">Signed in as {{ this.nickname }}</p>
-        <p class="app">Poker-App</p>
-      </ul>
-    </nav>
-    
-  </header>
+<nav class="navbar">
+  <ul>
+    <li class="stand"><router-link to="/" class="must">Home</router-link></li>
+    <li class="stand"><router-link to="/simulategame" class="must">Simulate Game</router-link></li>
+    <li @click="Logout" class="log"><router-link to="/login" class="must">Logout</router-link></li>
+  </ul>
+</nav>
 </template>
 
 <script>
@@ -49,61 +43,54 @@ export default {
 
 }
 </script>
-
-
 <style scoped>
-
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: #333;
-  border-radius: 30px;
-  text-transform: uppercase;
+.stand {
+  background-image: linear-gradient(40deg,#4082f5,#6272fc);
 }
 
-li {
-  float: left;
+.stand:hover {
+  background-image: linear-gradient(30deg,#030557,#6272fc);
+    box-shadow: #030557 0px 25px 35px -13px;
 }
 
-li a {
-  display: block;
-  color: white;
-  text-align: center;
-  padding: 14px 16px;
+.log {
+  background-image: linear-gradient(40deg, #e35b5a,#e63b3b);
+}
+
+.log:hover {
+  background-image: linear-gradient(30deg,#8d0202,#e35b5a);
+  box-shadow: #8d0202 0px 25px 35px -13px;
+}
+
+.must {
   text-decoration: none;
-  border-radius: 30px;
 }
 
-li a:hover {
-  background: #4082f5;
-  box-shadow: 0px 4px 35px -5px #4082f5;
-  cursor: pointer;
-  transition: all 0.5s ease-in-out;
-}
-
-li:focus {
-  outline: none;
-}
-
-.pos {
-  float: right;
-}
-
-.nickname {
-  color: #4082f5;
-  float: right;
+.navbar > ul > li{
+  list-style:none;
+  margin: 0px;
+  padding: 10px 20px;
+  font-size: 1.4rem;
+  font-family:bolder;
+  color:#ffff;
+  border-radius:20px;
+  transform: scale(0.8);
+  transition: all .2s ease-out;
   text-transform: uppercase;
-  margin: 14px;
-  font-weight: bold;
+}
+ul{
+  display:flex;
+  justify-content: center;
 }
 
-.app {
-  color: #e35b5a;
-  text-transform: uppercase;
-  margin: 14px;
-  font-weight: bold;
+.navbar > ul > li:hover{
+  font-size: 1.4rem;
+  transform: scale(0.9);
+  transition-duration: 1s ease-out;
+  border-radius:15px;
+  color:#ffffeb;
+  border:0.1px  black;
+  -webkit-tap-highlight-color: transparent;
+  animation-play-state: paused;
 }
-
 </style>
