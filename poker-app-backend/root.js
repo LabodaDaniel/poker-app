@@ -1,13 +1,17 @@
 import express from 'express';
 
 import  findStrongest  from './findStrongest.js';
+import  findEnemyStrongest  from './findEnemyStrongest.js';
 
 const router = express.Router();
-router.post('/strongest', (req, res, next) => {
+router.post('/mystrongest', (req, res, next) => {
     let cards = req.body;
-    console.log(req.body)
-    res.send(findStrongest(cards));
-    console.log(cards)
+    res.send.toString(findStrongest(cards));
+});
+
+router.post('/enemystrongest', (req, res, next) => {
+    let cards = req.body;
+    res.send.toString(findEnemyStrongest(cards));
 });
 
 export default router;

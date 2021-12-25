@@ -1,27 +1,37 @@
-import G from 'generatorics';
 import fs from 'fs';
+import G from 'generatorics';
 
-function createCombinations(sevenCards){
-    let combine = sevenCards.sevenCards;
-    let onlyName = [];
-    let allCombinations = [];
-    for (let card of combine){
-      onlyName.push(card.name);
-    }
-    for (let comb of G.combination(onlyName, 5)){
-      allCombinations.push(comb.slice());
-    }
-    return allCombinations;
+export default function findEnemyStrongest(enemyCards) {
+  let eCombination = enemyCards.enemyCards;
+  let result = [];
+  for(const comb of eCombination){
+  result.push(findStrongest(comb));
   }
+  let finalResult = [...new Set(result)];
+  console.log(finalResult);
+}
 
-  export default function findStrongest(comb){
+function createCombinations(enemyC){
+  let combine = enemyC;
+  let onlyName = [];
+  let allCombinations = [];
+  for (let card of combine){
+    onlyName.push(card);
+  }
+  for (let comb of G.combination(onlyName, 5)){
+    allCombinations.push(comb.slice());
+  }
+  return allCombinations;
+}
+
+function findStrongest(combi){
     let rawdata = fs.readFileSync('data.json');
     let strenghtOrder = JSON.parse(rawdata);
-    let combinations = createCombinations(comb);
+    let combinations = createCombinations(combi);
     let combinationsName = [];
     let ordered = "";
     let result = [];
-    
+
     for(let combination of combinations){
       let nameString = "";
       let colors = {'C': 0, 'S': 0, 'H':0, 'D':0};
@@ -33,7 +43,6 @@ function createCombinations(sevenCards){
       combinationsName.push(ordered);
       result.push(strenghtOrder.cardStrenght[ordered]);
     }
-    console.log(Math.min(...result));
     return Math.min(...result);
   }
 

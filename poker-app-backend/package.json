@@ -9,10 +9,11 @@
   },
   "author": "Daniel Laboda",
   "license": "ISC",
-  "type" : "module",
+  "type": "module",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.2",
+    "generatorics": "^1.1.0",
     "nodemon": "^2.0.15"
   }
 }
