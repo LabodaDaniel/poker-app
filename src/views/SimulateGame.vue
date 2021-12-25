@@ -13,13 +13,12 @@
         <ChanceChart :chartData="state.chartData" :chartOptions="state.chartOptions"/>
     </div>
   </div>
-  <br>
 
   <div @click="showColor" v-if="!isHidden">
+    <img src="@/assets/spades.png" class="imgColors" @click="choosenColor='spades', isHidden = true">
+    <img src="@/assets/hearts.png" class="imgColors" @click="choosenColor='hearts', isHidden = true">
     <img src="@/assets/clubs.png" class="imgColors" @click="choosenColor='clubs', isHidden = true">
     <img src="@/assets/diamonds.png" class="imgColors" @click="choosenColor='diamonds', isHidden = true">
-    <img src="@/assets/hearts.png" class="imgColors" @click="choosenColor='hearts', isHidden = true">
-    <img src="@/assets/spades.png" class="imgColors" @click="choosenColor='spades', isHidden = true">
   </div>
 
   <div v-if="showPic">
@@ -46,21 +45,24 @@
     </div>
   </div>
 
-<button @click="backend">Gomb</button>
-<button @click="createEnemysPossibleCards">Teszt</button>
+  <PageLoader v-if="8 == 9"/>
+
+  <button @click="backend2">Backend2</button>
+  <button @click="backend">Backend</button>
 
 </template>
 
 <script>
 import Navigation from "../components/Navigation.vue";
-import firebase from 'firebase/app';
+import ChanceChart from '../components/ChanceChart.vue';
+import PageLoader from '../components/PageLoader.vue';
 let G = require('generatorics');
-import ChanceChart from '../components/ChanceChart.vue'
 
 export default {
   components: {
     Navigation,
-    ChanceChart
+    ChanceChart,
+    PageLoader
   },
 
   data() {
@@ -128,7 +130,6 @@ export default {
       sevenCards: [],
       strenghtOrder : [],
       enemysCards : [],
-      notInTheDeck : [],
       state: {
         chartData: {
           datasets: [
@@ -147,7 +148,7 @@ export default {
           labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'],
         },
         chartOptions: {
-          responsive: false
+          responsive: true
         }
       }
     }
@@ -167,7 +168,9 @@ export default {
       this.showPic = false;
       this.isHidden = false;
       this.cards[id-1] = false;
-      this.notInTheDeck.push(id-1);
+      if(this.isThere === 7) {
+        this.createEnemysPossibleHands();
+      }
     },
     reloadPage() {
       window.location.reload();
@@ -178,31 +181,19 @@ export default {
     },
     backend(e){
       e.preventDefault();
-      fetch('http://localhost:5000/strongest', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({cards: this.sevenCards})})
+      fetch('http://localhost:5000/mystrongest', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({sevenCards: this.sevenCards})})
       .then(() => {console.log('Sucessfull Post')})
     },
-    getAllCombinationsData(){
-      firebase
-      .app()
-      .database('https://vue-auth-6de17-default-rtdb.europe-west1.firebasedatabase.app/')
-      .ref('/cardStrenght/')
-      .once('value')
-      .then(snapshot => {
-        this.strenghtOrder = snapshot.val()
-      })
-      .then(res => {
-        if(res){
-          console.alert(res);
-          return;
-        }
-      })
+    backend2(e){
+      e.preventDefault();
+      fetch('http://localhost:5000/enemystrongest', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({enemyCards: this.enemysCards})})
+      .then(() => {console.log('Sucessfull Post backend2')})
     },
-    createEnemysPossibleCards() {
+    createEnemysPossibleHands() {
       let help = [];
       let help2 = [];
       let eCombination = [];
       let cards = this.cards;
-      // let result = [];
       for(let card of cards){
         if(card.name != null){
           help.push(card.name);
@@ -218,17 +209,10 @@ export default {
       for(let comb of allCombinations){
         eCombination.push(comb.concat(help2.slice(2,7)));
       }
-      // console.log(eCombination)
-      // for(let comb of eCombination){
-      //   result.push(this.findStrongest(comb));
-      //   console.log(this.findStrongest(comb));
-      // }
-      console.log(this.findStrongest(eCombination))
-      
+      for(let comb of eCombination){
+        this.enemysCards.push(comb);
+      }
     }
-    },
-    mounted(){
-      this.getAllCombinationsData();
     }
 }
 </script>

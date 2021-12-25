@@ -142,7 +142,8 @@
   #chart {
     position: absolute;
     left: 0;
-    top: 20px;
-    display: block;
-    width: 20%;
+    top: 60px;
+    display: block; 
+    width: 100%;
+    max-width: 21%;
   }
