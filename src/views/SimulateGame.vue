@@ -182,12 +182,14 @@ export default {
     backend(e){
       e.preventDefault();
       fetch('http://localhost:5000/mystrongest', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({sevenCards: this.sevenCards})})
-      .then(() => {console.log('Sucessfull Post')})
+      .then((res) => {return res.json()})
+      .then((json) => {console.log(json)})
     },
     backend2(e){
       e.preventDefault();
       fetch('http://localhost:5000/enemystrongest', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({enemyCards: this.enemysCards})})
-      .then(() => {console.log('Sucessfull Post backend2')})
+      .then((res) => {return res.json()})
+      .then((json) => {console.log(json)})
     },
     createEnemysPossibleHands() {
       let help = [];
