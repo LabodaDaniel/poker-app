@@ -7,8 +7,7 @@ export default function findEnemyStrongest(enemyCards) {
   for(const comb of eCombination){
   result.push(findStrongest(comb));
   }
-  let finalResult = [...new Set(result)];
-  console.log(finalResult);
+  return result;
 }
 
 function createCombinations(enemyC){

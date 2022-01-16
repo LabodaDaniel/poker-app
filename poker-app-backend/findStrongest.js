@@ -33,7 +33,6 @@ function createCombinations(sevenCards){
       combinationsName.push(ordered);
       result.push(strenghtOrder.cardStrenght[ordered]);
     }
-    console.log(Math.min(...result));
     return Math.min(...result);
   }
 
