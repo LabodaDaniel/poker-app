@@ -56,7 +56,7 @@
 import Navigation from "../components/Navigation.vue";
 import ChanceChart from '../components/ChanceChart.vue';
 import PageLoader from '../components/PageLoader.vue';
-let G = require('generatorics');
+// let G = require('generatorics');
 
 export default {
   components: {
@@ -187,34 +187,34 @@ export default {
     },
     backend2(e){
       e.preventDefault();
-      fetch('http://localhost:5000/enemystrongest', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({enemyCards: this.enemysCards})})
+      fetch('http://localhost:5000/enemystrongest', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({sevenCards: this.sevenCards})})
       .then((res) => {return res.json()})
       .then((json) => {console.log(json)})
     },
-    createEnemysPossibleHands() {
-      let help = [];
-      let help2 = [];
-      let eCombination = [];
-      let cards = this.cards;
-      for(let card of cards){
-        if(card.name != null){
-          help.push(card.name);
-        }
-      }
-      let allCombinations = [];
-      for (let comb of G.combination(help, 2)){
-        allCombinations.push(comb.slice());
-      }
-      for(let card of this.sevenCards){
-        help2.push(card.name);
-      }
-      for(let comb of allCombinations){
-        eCombination.push(comb.concat(help2.slice(2,7)));
-      }
-      for(let comb of eCombination){
-        this.enemysCards.push(comb);
-      }
-    }
+    // createEnemysPossibleHands() {
+    //   let help = [];
+    //   let help2 = [];
+    //   let eCombination = [];
+    //   let cards = this.cards;
+    //   for(let card of cards){
+    //     if(card.name != null){
+    //       help.push(card.name);
+    //     }
+    //   }
+    //   let allCombinations = [];
+    //   for (let comb of G.combination(help, 2)){
+    //     allCombinations.push(comb.slice());
+    //   }
+    //   for(let card of this.sevenCards){
+    //     help2.push(card.name);
+    //   }
+    //   for(let comb of allCombinations){
+    //     eCombination.push(comb.concat(help2.slice(2,7)));
+    //   }
+    //   for(let comb of eCombination){
+    //     this.enemysCards.push(comb);
+    //   }
+    // }
     }
 }
 </script>
