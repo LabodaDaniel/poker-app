@@ -58,34 +58,46 @@ const everyCards = [
 
 export default function findEnemyStrongest(sevenCards) {
   let inSevenCards = sevenCards.sevenCards;
-  const inEveryCards = everyCards;
-  let eCombination = createEnemysPossibleHands(inSevenCards, inEveryCards);
+  let inEveryCards = [...everyCards];
+  let inSevenCardsName = [];
+  for (let card of inSevenCards) {
+    inSevenCardsName.push(card.name);
+  }
+  for (let card of inSevenCardsName) {
+    inEveryCards = removeItemOnce(inEveryCards, card);
+  }
+  let inEveryCardsWithoutBoard = [...inEveryCards];
   let result = [];
   if (inSevenCards.length == 7) {
+    let eCombination = createEnemysPossibleHands(inEveryCardsWithoutBoard, inSevenCardsName);
     for (const comb of eCombination) {
       result.push(findStrongest(comb));
     }
     console.log(result.length)
     return result;
   } else if (inSevenCards.length == 6) {
-    let turnCombination = createEnemysPossibleHands(inSevenCards, inEveryCards);
-    console.log(turnCombination.length)
+    let i = 0;
+    for(let comb of inEveryCards){
+      console.log(comb.toString())
+      let turnCombination = createEnemysPossibleHands(removeItemOnce(inEveryCards, comb), inSevenCardsName.concat(comb.toString()));
+      for(let combi of turnCombination){
+        if(findStrongest(combi) == 1){i++}
+        result.push(findStrongest(combi));
+      }
+      inEveryCards = inEveryCardsWithoutBoard.slice();
+    }
+    console.log(result.length)
+    console.log(i)
+    return result;
   }
 }
 
-function createEnemysPossibleHands(inSevenCards, allCards) {
-  let inSevenCardsName = [];
+function createEnemysPossibleHands(allCards, inSevenCardsName) {
+  
   let eCombination = [];
   let everyCardsRiver = [...allCards];
   let allCombinations = [];
   let enemyCards = [];
-  for (let card of inSevenCards) {
-    inSevenCardsName.push(card.name);
-  }
-  for (let card of inSevenCardsName) {
-    everyCardsRiver = removeItemOnce(everyCardsRiver, card);
-  }
-  console.log(everyCardsRiver.length)
   for (let comb of G.combination(everyCardsRiver, 2)) {
     allCombinations.push(comb.slice());
   }

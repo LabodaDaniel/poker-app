@@ -1,39 +1,136 @@
 import G from 'generatorics';
 import fs from 'fs';
 
+const everyCards = [
+  "2C",
+  "3C",
+  "4C",
+  "5C",
+  "6C",
+  "7C",
+  "8C",
+  "9C",
+  "TC",
+  "JC",
+  "QC",
+  "KC",
+  "AC",
+  "2D",
+  "3D",
+  "4D",
+  "5D",
+  "6D",
+  "7D",
+  "8D",
+  "9D",
+  "TD",
+  "JD",
+  "QD",
+  "KD",
+  "AD",
+  "2H",
+  "3H",
+  "4H",
+  "5H",
+  "6H",
+  "7H",
+  "8H",
+  "9H",
+  "TH",
+  "JH",
+  "QH",
+  "KH",
+  "AH",
+  "2S",
+  "3S",
+  "4S",
+  "5S",
+  "6S",
+  "7S",
+  "8S",
+  "9S",
+  "TS",
+  "JS",
+  "QS",
+  "KS",
+  "AS",
+];
+
 function createCombinations(sevenCards){
-    let combine = sevenCards.sevenCards;
-    let onlyName = [];
     let allCombinations = [];
-    for (let card of combine){
-      onlyName.push(card.name);
-    }
-    for (let comb of G.combination(onlyName, 5)){
-      allCombinations.push(comb.slice());
-    }
-    return allCombinations;
+      for (let comb of G.combination(sevenCards, 5)){
+        allCombinations.push(comb.slice());
+      }
+      return allCombinations;
   }
 
-  export default function findStrongest(comb){
+  export default function findStrongest(sevenCards){
+    let comb = sevenCards.sevenCards;
+    let onlyName = [];
+    for (let card of comb){
+      onlyName.push(card.name);
+    }
     let rawdata = fs.readFileSync('data.json');
     let strenghtOrder = JSON.parse(rawdata);
-    let combinations = createCombinations(comb);
+    
     let combinationsName = [];
     let ordered = "";
     let result = [];
-    
-    for(let combination of combinations){
-      let nameString = "";
-      let colors = {'C': 0, 'S': 0, 'H':0, 'D':0};
-      for(let card of combination){
-        nameString += card[0];
-        colors[card[1]]+=1
+
+    if(onlyName.length == 7){
+      let combinations = createCombinations(onlyName);
+      for(let combination of combinations){
+        let nameString = "";
+        let colors = {'C': 0, 'S': 0, 'H':0, 'D':0};
+        for(let card of combination){
+          nameString += card[0];
+          colors[card[1]]+=1
+        }
+        ordered = sortCardOrder(nameString, colors);
+        combinationsName.push(ordered);
+        result.push(strenghtOrder.cardStrenght[ordered]);
       }
-      ordered = sortCardOrder(nameString, colors);
-      combinationsName.push(ordered);
-      result.push(strenghtOrder.cardStrenght[ordered]);
+      return Math.min(...result);
+    }else if(onlyName.length == 6){
+      let inEveryCards = [...everyCards];
+      let turnCombination = [];
+      for (let card of onlyName) {
+        inEveryCards = removeItemOnce(inEveryCards, card);
+      }
+      for(let comb of inEveryCards){
+        let combinations = createCombinations(onlyName.concat(comb));
+        let turnResult = []
+        for(let combination of combinations){
+          let nameString = "";
+          let colors = {'C': 0, 'S': 0, 'H':0, 'D':0};
+          for(let card of combination){
+            nameString += card[0];
+            colors[card[1]]+=1
+          }
+          let turnOrdered = sortCardOrder(nameString, colors);
+          let turnCombinationsName = [];
+          turnCombinationsName.push(ordered);
+          turnResult.push(strenghtOrder.cardStrenght[turnOrdered]);
+        }
+        turnCombination.push(Math.min(...turnResult));
+      }
+      return turnCombination;
+    }else if(onlyName.length == 5){
+      let inEveryCards = [...everyCards];
+      let inEveryCardsWithoutBoard = [];
+      for (let card of onlyName) {
+        inEveryCardsWithoutBoard = removeItemOnce(inEveryCards, card);
+      }
+      for(let comb of inEveryCardsWithoutBoard){
+        let turnInEveryCards = removeItemOnce(inEveryCardsWithoutBoard, comb);
+        let combinations = onlyName.concat(comb);
+        for(let riverComb of turnInEveryCards){
+          let riverInEveryCards = removeItemOnce(turnInEveryCards, riverComb);
+          let riverCombinations = combinations.concat(riverComb);
+          console.log(riverInEveryCards.length)
+        }
+      }
     }
-    return Math.min(...result);
   }
 
   function sortCardOrder(string, colors){
@@ -102,4 +199,12 @@ function createCombinations(sevenCards){
     }
 
     return(ordered)
+  }
+
+  function removeItemOnce(arr, value) {
+    var index = arr.indexOf(value);
+    if (index > -1) {
+      arr.splice(index, 1);
+    }
+    return arr;
   }
