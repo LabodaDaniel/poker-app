@@ -66,9 +66,9 @@ function createCombinations(sevenCards){
 
   export default function findStrongest(sevenCards){
     let comb = sevenCards.sevenCards;
-    let onlyName = [];
+    let onylNameOfSevenCards = [];
     for (let card of comb){
-      onlyName.push(card.name);
+      onylNameOfSevenCards.push(card.name);
     }
     let rawdata = fs.readFileSync('data.json');
     let strenghtOrder = JSON.parse(rawdata);
@@ -77,8 +77,8 @@ function createCombinations(sevenCards){
     let ordered = "";
     let result = [];
 
-    if(onlyName.length == 7){
-      let combinations = createCombinations(onlyName);
+    if(onylNameOfSevenCards.length == 7){
+      let combinations = createCombinations(onylNameOfSevenCards);
       for(let combination of combinations){
         let nameString = "";
         let colors = {'C': 0, 'S': 0, 'H':0, 'D':0};
@@ -91,14 +91,15 @@ function createCombinations(sevenCards){
         result.push(strenghtOrder.cardStrenght[ordered]);
       }
       return Math.min(...result);
-    }else if(onlyName.length == 6){
+    }else if(onylNameOfSevenCards.length == 6){
       let inEveryCards = [...everyCards];
       let turnCombination = [];
-      for (let card of onlyName) {
+      for (let card of onylNameOfSevenCards) {
         inEveryCards = removeItemOnce(inEveryCards, card);
       }
+
       for(let comb of inEveryCards){
-        let combinations = createCombinations(onlyName.concat(comb));
+        let combinations = createCombinations(onylNameOfSevenCards.concat(comb));
         let turnResult = []
         for(let combination of combinations){
           let nameString = "";
@@ -113,23 +114,42 @@ function createCombinations(sevenCards){
           turnResult.push(strenghtOrder.cardStrenght[turnOrdered]);
         }
         turnCombination.push(Math.min(...turnResult));
-      }
+      } 
       return turnCombination;
-    }else if(onlyName.length == 5){
-      let inEveryCards = [...everyCards];
-      let inEveryCardsWithoutBoard = [];
-      for (let card of onlyName) {
-        inEveryCardsWithoutBoard = removeItemOnce(inEveryCards, card);
+    }else if(onylNameOfSevenCards.length == 5){
+      let everyCardsWithoutBoard = [...everyCards];
+      for (let card of onylNameOfSevenCards) {
+        everyCardsWithoutBoard = removeItemOnce(everyCardsWithoutBoard, card);
       }
-      for(let comb of inEveryCardsWithoutBoard){
-        let turnInEveryCards = removeItemOnce(inEveryCardsWithoutBoard, comb);
-        let combinations = onlyName.concat(comb);
-        for(let riverComb of turnInEveryCards){
-          let riverInEveryCards = removeItemOnce(turnInEveryCards, riverComb);
-          let riverCombinations = combinations.concat(riverComb);
-          console.log(riverInEveryCards.length)
+
+      let flopCombinationsValue = [];
+      let flopResult = [];
+      for(let card of everyCardsWithoutBoard){
+        let everyCardsWithoutBoardTurn = removeItemOnce(everyCardsWithoutBoard, card);
+        let onylNameOfSevenCardsTurn = onylNameOfSevenCards.concat(card);
+        for(let inCard of everyCardsWithoutBoardTurn){
+          let onylNameOfSevenCardsRiver = onylNameOfSevenCardsTurn.concat(inCard);
+
+          let combinations = createCombinations(onylNameOfSevenCardsRiver);
+          
+          for(let combination of combinations){
+            let nameString = "";
+            let colors = {'C': 0, 'S': 0, 'H':0, 'D':0};
+            for(let card of combination){
+              nameString += card[0];
+              colors[card[1]]+=1
+            }
+            let flopOrdered = sortCardOrder(nameString, colors);
+            let flopCombinationsName = [];
+            flopCombinationsName.push(ordered);
+            flopResult.push(strenghtOrder.cardStrenght[flopOrdered]);
+          }
+          flopCombinationsValue.push(Math.min(...flopResult));
+          flopResult = [];
         }
       }
+      console.log(flopCombinationsValue.length)
+      return flopCombinationsValue;
     }
   }
 
@@ -202,9 +222,10 @@ function createCombinations(sevenCards){
   }
 
   function removeItemOnce(arr, value) {
-    var index = arr.indexOf(value);
+    let arrCopy = [...arr]
+    var index = arrCopy.indexOf(value);
     if (index > -1) {
-      arr.splice(index, 1);
+      arrCopy.splice(index, 1);
     }
-    return arr;
+    return arrCopy;
   }

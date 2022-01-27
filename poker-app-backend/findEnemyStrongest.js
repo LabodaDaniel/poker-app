@@ -67,6 +67,7 @@ export default function findEnemyStrongest(sevenCards) {
     inEveryCards = removeItemOnce(inEveryCards, card);
   }
   let inEveryCardsWithoutBoard = [...inEveryCards];
+  let inSevenCardsTurn = [...inSevenCardsName]
   let result = [];
   if (inSevenCards.length == 7) {
     let eCombination = createEnemysPossibleHands(inEveryCardsWithoutBoard, inSevenCardsName);
@@ -77,14 +78,18 @@ export default function findEnemyStrongest(sevenCards) {
     return result;
   } else if (inSevenCards.length == 6) {
     let i = 0;
+    console.log(inEveryCards)
     for(let comb of inEveryCards){
+      inEveryCardsWithoutBoard = removeItemOnce(inEveryCardsWithoutBoard, comb);
+      inSevenCardsTurn = inSevenCardsName.concat(comb.toString())
       console.log(comb.toString())
-      let turnCombination = createEnemysPossibleHands(removeItemOnce(inEveryCards, comb), inSevenCardsName.concat(comb.toString()));
+      let turnCombination = createEnemysPossibleHands(inEveryCardsWithoutBoard, inSevenCardsTurn);
       for(let combi of turnCombination){
         if(findStrongest(combi) == 1){i++}
         result.push(findStrongest(combi));
       }
-      inEveryCards = inEveryCardsWithoutBoard.slice();
+      inEveryCardsWithoutBoard = [...inEveryCards];
+      inSevenCardsTurn = [...inSevenCardsName];
     }
     console.log(result.length)
     console.log(i)
@@ -111,11 +116,12 @@ function createEnemysPossibleHands(allCards, inSevenCardsName) {
 }
 
 function removeItemOnce(arr, value) {
-  var index = arr.indexOf(value);
+  let arrCopy = arr;
+  var index = arrCopy.indexOf(value);
   if (index > -1) {
-    arr.splice(index, 1);
+    arrCopy.splice(index, 1);
   }
-  return arr;
+  return arrCopy;
 }
 
 function createCombinations(enemyC) {
