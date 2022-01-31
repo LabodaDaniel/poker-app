@@ -117,7 +117,20 @@ export default {
   computed: {
     chartOptions() {
       return {
-        elements: {
+          scales: {
+            y: {
+              title: {
+                display: true,
+                text: 'Value'
+              },
+            min: 0,
+            max: 100,
+            ticks: {
+              stepSize: 10,
+            }
+            },
+          },
+          elements: {
           point: {
             radius: 0
           },
@@ -136,54 +149,55 @@ export default {
             },
           },
         },
+        
       }
     },
     chartData() {
       return {
-        labels: this.enemysCards.map((x, index) => index + 1),
+        labels: this.column.map((x, index) => index + 1),
         datasets: [
           {
+            type: 'bar',
             label: "Enemy's Chance",
             borderColor: "#1161ed",
             borderWidth: 2,
-            pointRadius: 0,
-            data: this.enemysCards,
+            data: this.enemyCardsFilled,
           },
           {
+            type: 'bar',
             label: "My Chance",
             borderColor: "#f87979",
             borderWidth: 2,
-            pointRadius: 0,
             data: this.myCardsFilled,
           },
           {
+            type: 'line',
             label: "Enemy's Avarage",
             borderColor: "rgb(238, 255, 0)",
             borderWidth: 2,
-            pointRadius: 0,
-            data: this.avgArray,
+            data: [50],
           },
-          {
-            label: "Enemy's Median",
-            borderColor: "rgb(255, 0, 191)",
-            borderWidth: 2,
-            pointRadius: 0,
-            data: this.medianArray,
-          },
-          {
-            label: "Standard Deviation",
-            borderColor: "#fff",
-            borderWidth: 2,
-            pointRadius: 0,
-            data: this.upDev,
-          },
-          {
-            label: "Standard Deviation",
-            borderColor: "#fff",
-            borderWidth: 2,
-            pointRadius: 0,
-            data: this.downDev,
-          },
+          // {
+          //   label: "Enemy's Median",
+          //   borderColor: "rgb(255, 0, 191)",
+          //   borderWidth: 2,
+          //   pointRadius: 0,
+          //   data: this.medianArray,
+          // },
+          // {
+          //   label: "Standard Deviation",
+          //   borderColor: "#fff",
+          //   borderWidth: 2,
+          //   pointRadius: 0,
+          //   data: this.upDev,
+          // },
+          // {
+          //   label: "Standard Deviation",
+          //   borderColor: "#fff",
+          //   borderWidth: 2,
+          //   pointRadius: 0,
+          //   data: this.downDev,
+          // },
         ],
       }
     },
@@ -515,48 +529,76 @@ export default {
       colors: ["clubs", "diamonds", "hearts", "spades"],
       sevenCards: [],
       enemysCards: [],
+      enemyCardsFilled: 0,
       myCards: [],
-      myCardsFilled: [],
+      myCardsFilled: 0,
       avgArray: [],
       medianArray: [],
       downDev: [],
       upDev: [],
+      column: [],
     };
   },
 
   methods: {
-    chartCalc() {
-      let enemyCardsChart = this.enemysCards.sort(function(a, b) {
-        return a - b;
-      });
-      let myCardsChart = this.myCards;
-      let dev = this.calculateDeviation(enemyCardsChart);
-      let total = 0;
-      for (let i = 0; i < enemyCardsChart.length; i++) {
-        total += enemyCardsChart[i];
+    chartCalc(){
+      let enemyCards = this.enemysCards;
+      let myCards = this.myCards;
+      if(enemyCards.length == 45540){
+        this.column = myCards;
+        let start = 0;
+      let end = 990;
+      let chance = 0;
+      let myChance = [];
+      let eChance = [];
+      
+      for(let i=0; i < myCards.length; i++){
+        for(let j=start; j < end; j++){
+          if(enemyCards[j] > myCards[i]){
+            chance = chance+1;
+          }
+        }
+        myChance.push((chance/990)*100);
+        eChance.push(((990-chance)/990)*100);
+        chance = 0;
+        start+=990;
+        end+=990;
       }
-      let avg = total / enemyCardsChart.length;
-      let avgArray = [];
-      let median = this.findMedian(enemyCardsChart);
-      let downDev = median - dev / 2;
-      let downDevArr = [];
-      let upDev = median + dev / 2;
-      let upDevArr = [];
-      let medianArray = [];
-      let help = [];
-      for (let i = 0; i < enemyCardsChart.length; i++) {
-        help.push(myCardsChart);
-        avgArray.push(avg);
-        medianArray.push(median);
-        downDevArr.push(downDev);
-        upDevArr.push(upDev);
+      console.log("Enyém: " + myChance);
+      console.log("Enemy: " + eChance);
+      this.enemyCardsFilled = [...eChance];
+      this.myCardsFilled = [...myChance];
+      }else if(enemyCards.length == 990){
+        this.column = ["123"];
+        let myChance = 0;
+      for(let card of enemyCards){
+        if(card > myCards){
+          myChance = myChance+1;
+        }
       }
-      this.upDev = upDevArr;
-      this.downDev = downDevArr;
-      this.medianArray = medianArray;
-      this.myCardsFilled = help;
-      this.avgArray = avgArray;
-      this.showChart = true;
+      let myColumn = (myChance/enemyCards.length)*100;
+      let enemyColumn = (100 - myColumn);
+      console.log("Én esélyem: " + myColumn);
+      console.log("Enyemy esélye: " + enemyColumn);
+      this.emnemyCardsFilled = [enemyColumn];
+      this.myCardsFilled = [myColumn];
+      }
+    },
+    chartCalcRiver() {
+      let enemyCards = this.enemysCards;
+      let myCards = this.myCards;
+      let myChance = 0;
+      for(let card of enemyCards){
+        if(card > myCards){
+          myChance = myChance+1;
+        }
+      }
+      let myColumn = (myChance/enemyCards.length)*100;
+      let enemyColumn = (100 - myColumn);
+      console.log("Én esélyem: " + myColumn);
+      console.log("Enyemy esélye: " + enemyColumn);
+      this.emnemyCardsFilled = [enemyColumn];
+      this.myCardsFilled = [myColumn];
     },
     findMedian(values) {
       if (values.length === 0) throw new Error("No inputs");
