@@ -77,7 +77,6 @@ export default function findEnemyStrongest(sevenCards) {
     console.log(result.length)
     return result;
   } else if (inSevenCards.length == 6) {
-    let i = 0;
     console.log(inEveryCards)
     for(let comb of inEveryCards){
       inEveryCardsWithoutBoard = removeItemOnce(inEveryCardsWithoutBoard, comb);
@@ -85,14 +84,12 @@ export default function findEnemyStrongest(sevenCards) {
       console.log(comb.toString())
       let turnCombination = createEnemysPossibleHands(inEveryCardsWithoutBoard, inSevenCardsTurn);
       for(let combi of turnCombination){
-        if(findStrongest(combi) == 1){i++}
         result.push(findStrongest(combi));
       }
       inEveryCardsWithoutBoard = [...inEveryCards];
       inSevenCardsTurn = [...inSevenCardsName];
     }
     console.log(result.length)
-    console.log(i)
     return result;
   }
 }
