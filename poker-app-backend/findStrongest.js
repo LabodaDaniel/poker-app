@@ -56,6 +56,7 @@ const everyCards = [
   "AS",
 ];
 
+//Megkap egy tömböt, amiben 7 lap van, legenerálja a 7 alatt az 5-öt(=21).
 function createCombinations(sevenCards){
     let allCombinations = [];
       for (let comb of G.combination(sevenCards, 5)){
@@ -121,17 +122,12 @@ function createCombinations(sevenCards){
       for (let card of onylNameOfSevenCards) {
         everyCardsWithoutBoard = removeItemOnce(everyCardsWithoutBoard, card);
       }
-
-      let flopCombinationsValue = [];
-      let flopResult = [];
-      for(let card of everyCardsWithoutBoard){
-        let everyCardsWithoutBoardTurn = removeItemOnce(everyCardsWithoutBoard, card);
-        let onylNameOfSevenCardsTurn = onylNameOfSevenCards.concat(card);
-        for(let inCard of everyCardsWithoutBoardTurn){
-          let onylNameOfSevenCardsRiver = onylNameOfSevenCardsTurn.concat(inCard);
-
-          let combinations = createCombinations(onylNameOfSevenCardsRiver);
-          
+      let flopCombinationsValue = []; 
+      for(let i=0; i < everyCardsWithoutBoard.length; i++){
+        let sCards = onylNameOfSevenCards.concat(everyCardsWithoutBoard[i]);
+        for(let j=i+1; j < everyCardsWithoutBoard.length; j++){
+          let flopResult = [];
+          let combinations = createCombinations(sCards.concat(everyCardsWithoutBoard[j]));
           for(let combination of combinations){
             let nameString = "";
             let colors = {'C': 0, 'S': 0, 'H':0, 'D':0};
@@ -145,14 +141,13 @@ function createCombinations(sevenCards){
             flopResult.push(strenghtOrder.cardStrenght[flopOrdered]);
           }
           flopCombinationsValue.push(Math.min(...flopResult));
-          flopResult = [];
         }
       }
-      console.log(flopCombinationsValue.length)
       return flopCombinationsValue;
     }
   }
 
+  //Sorba rendezi a lapokat, hogy meg tudjuk keresni az értékét a data.json-ben.
   function sortCardOrder(string, colors){
     let ordered = "";
     let timesArray = [(string.match(/A/g) || []).length,
@@ -221,6 +216,7 @@ function createCombinations(sevenCards){
     return(ordered)
   }
 
+  //Megkap egy tömböt és egy értéket. Kitörli a tömbből azt az értéket, amit megkap.
   function removeItemOnce(arr, value) {
     let arrCopy = [...arr]
     var index = arrCopy.indexOf(value);

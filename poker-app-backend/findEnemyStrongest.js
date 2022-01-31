@@ -59,32 +59,27 @@ const everyCards = [
 export default function findEnemyStrongest(sevenCards) {
   let inSevenCards = sevenCards.sevenCards;
   let inEveryCards = [...everyCards];
-  let inSevenCardsName = [];
-  for (let card of inSevenCards) {
-    inSevenCardsName.push(card.name);
-  }
+  let inSevenCardsName = getOnlyName(inSevenCards);
   for (let card of inSevenCardsName) {
     inEveryCards = removeItemOnce(inEveryCards, card);
   }
-  let inEveryCardsWithoutBoard = [...inEveryCards];
-  let inSevenCardsTurn = [...inSevenCardsName]
   let result = [];
   if (inSevenCards.length == 7) {
-    let eCombination = createEnemysPossibleHands(inEveryCardsWithoutBoard, inSevenCardsName);
+    let eCombination = createEnemysPossibleHands(inEveryCards, inSevenCardsName);
     for (const comb of eCombination) {
-      result.push(findStrongest(comb));
+      result.push(findStrongestOfEnemysCards(comb));
     }
     console.log(result.length)
     return result;
   } else if (inSevenCards.length == 6) {
-    console.log(inEveryCards)
+    let inEveryCardsWithoutBoard = [...inEveryCards];
+    let inSevenCardsTurn = [...inSevenCardsName];
     for(let comb of inEveryCards){
-      inEveryCardsWithoutBoard = removeItemOnce(inEveryCardsWithoutBoard, comb);
       inSevenCardsTurn = inSevenCardsName.concat(comb.toString())
       console.log(comb.toString())
-      let turnCombination = createEnemysPossibleHands(inEveryCardsWithoutBoard, inSevenCardsTurn);
+      let turnCombination = createEnemysPossibleHands(removeItemOnce(inEveryCardsWithoutBoard, comb), inSevenCardsTurn);
       for(let combi of turnCombination){
-        result.push(findStrongest(combi));
+        result.push(findStrongestOfEnemysCards(combi));
       }
       inEveryCardsWithoutBoard = [...inEveryCards];
       inSevenCardsTurn = [...inSevenCardsName];
@@ -94,6 +89,7 @@ export default function findEnemyStrongest(sevenCards) {
   }
 }
 
+//Megkapja az összes kártyát és a lent lévő kártyákat. Visszaadja az ellenfél lehetséges kombinációit (maradék lap alatt a 2).
 function createEnemysPossibleHands(allCards, inSevenCardsName) {
   
   let eCombination = [];
@@ -112,6 +108,7 @@ function createEnemysPossibleHands(allCards, inSevenCardsName) {
   return enemyCards;
 }
 
+//Megkap egy tömböt és egy értéket. Kitörli a tömbből azt az értéket, amit megkap.
 function removeItemOnce(arr, value) {
   let arrCopy = arr;
   var index = arrCopy.indexOf(value);
@@ -121,11 +118,11 @@ function removeItemOnce(arr, value) {
   return arrCopy;
 }
 
-function createCombinations(enemyC) {
-  let combine = enemyC;
+//Megkap egy tömböt, amiben 7 lap van, legenerálja a 7 alatt az 5-öt(=21).
+function createEnemysCombinations(enemyC) {
   let onlyName = [];
   let allCombinations = [];
-  for (let card of combine) {
+  for (let card of enemyC) {
     onlyName.push(card);
   }
   for (let comb of G.combination(onlyName, 5)) {
@@ -134,10 +131,20 @@ function createCombinations(enemyC) {
   return allCombinations;
 }
 
-function findStrongest(combi) {
+//Egy object-ből kiszedi a kártyák neveit.
+function getOnlyName(sevenCards){
+  let sevenCardsName = [];
+  for (let card of sevenCards) {
+    sevenCardsName.push(card.name);
+  }
+  return sevenCardsName;
+}
+
+//A createEnemysCombinations-tól kapott 21 5-ös kombinációból kiválasztja a legerősebbet.
+function findStrongestOfEnemysCards(combi) {
   let rawdata = fs.readFileSync("data.json");
   let strenghtOrder = JSON.parse(rawdata);
-  let combinations = createCombinations(combi);
+  let combinations = createEnemysCombinations(combi);
   let combinationsName = [];
   let ordered = "";
   let result = [];
@@ -156,6 +163,7 @@ function findStrongest(combi) {
   return Math.min(...result);
 }
 
+//Sorba rendezi a lapokat, hogy meg tudjuk keresni az értékét a data.json-ben.
 function sortCardOrder(string, colors) {
   let ordered = "";
   let timesArray = [
