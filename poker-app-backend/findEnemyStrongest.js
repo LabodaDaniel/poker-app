@@ -1,5 +1,6 @@
 import fs from "fs";
 import G from "generatorics";
+import { sortCardOrder, removeItemOnce, getOnlyName, getJustDeck } from './helperFunctions.js';
 
 const everyCards = [
   "2C",
@@ -58,33 +59,38 @@ const everyCards = [
 
 export default function findEnemyStrongest(sevenCards) {
   let inSevenCards = sevenCards.sevenCards;
-  let inEveryCards = [...everyCards];
   let inSevenCardsName = getOnlyName(inSevenCards);
-  for (let card of inSevenCardsName) {
-    inEveryCards = removeItemOnce(inEveryCards, card);
-  }
+  let inEveryCards = getJustDeck(everyCards, inSevenCardsName)
   let result = [];
   if (inSevenCards.length == 7) {
     let eCombination = createEnemysPossibleHands(inEveryCards, inSevenCardsName);
     for (const comb of eCombination) {
       result.push(findStrongestOfEnemysCards(comb));
     }
-    console.log(result.length)
     return result;
   } else if (inSevenCards.length == 6) {
     let inEveryCardsWithoutBoard = [...inEveryCards];
-    let inSevenCardsTurn = [...inSevenCardsName];
     for(let comb of inEveryCards){
-      inSevenCardsTurn = inSevenCardsName.concat(comb.toString())
-      console.log(comb.toString())
-      let turnCombination = createEnemysPossibleHands(removeItemOnce(inEveryCardsWithoutBoard, comb), inSevenCardsTurn);
+      let turnCombination = createEnemysPossibleHands(removeItemOnce(inEveryCardsWithoutBoard, comb), inSevenCardsName.concat(comb.toString()));
       for(let combi of turnCombination){
         result.push(findStrongestOfEnemysCards(combi));
       }
       inEveryCardsWithoutBoard = [...inEveryCards];
-      inSevenCardsTurn = [...inSevenCardsName];
     }
-    console.log(result.length)
+    return result;
+  }else if (inSevenCards.length == 5){
+    let inEveryCardsWithoutBoard = [...inEveryCards];
+    for(let i=0;i<inEveryCards.length;i++){
+      for(let j=i+1;j<inEveryCards.length;j++){
+        let remove = removeItemOnce(inEveryCardsWithoutBoard, inEveryCards[i])
+        remove = removeItemOnce(inEveryCardsWithoutBoard, inEveryCards[j])
+        let turnCombination = createEnemysPossibleHands(remove, inSevenCardsName.concat(inEveryCards[i], inEveryCards[j]));
+        for(let combi of turnCombination){
+          result.push(findStrongestOfEnemysCards(combi));
+        }
+        inEveryCardsWithoutBoard = [...inEveryCards];
+      }
+    }
     return result;
   }
 }
@@ -108,16 +114,6 @@ function createEnemysPossibleHands(allCards, inSevenCardsName) {
   return enemyCards;
 }
 
-//Megkap egy tömböt és egy értéket. Kitörli a tömbből azt az értéket, amit megkap.
-function removeItemOnce(arr, value) {
-  let arrCopy = arr;
-  var index = arrCopy.indexOf(value);
-  if (index > -1) {
-    arrCopy.splice(index, 1);
-  }
-  return arrCopy;
-}
-
 //Megkap egy tömböt, amiben 7 lap van, legenerálja a 7 alatt az 5-öt(=21).
 function createEnemysCombinations(enemyC) {
   let onlyName = [];
@@ -129,15 +125,6 @@ function createEnemysCombinations(enemyC) {
     allCombinations.push(comb.slice());
   }
   return allCombinations;
-}
-
-//Egy object-ből kiszedi a kártyák neveit.
-function getOnlyName(sevenCards){
-  let sevenCardsName = [];
-  for (let card of sevenCards) {
-    sevenCardsName.push(card.name);
-  }
-  return sevenCardsName;
 }
 
 //A createEnemysCombinations-tól kapott 21 5-ös kombinációból kiválasztja a legerősebbet.
@@ -161,75 +148,4 @@ function findStrongestOfEnemysCards(combi) {
     result.push(strenghtOrder.cardStrenght[ordered]);
   }
   return Math.min(...result);
-}
-
-//Sorba rendezi a lapokat, hogy meg tudjuk keresni az értékét a data.json-ben.
-function sortCardOrder(string, colors) {
-  let ordered = "";
-  let timesArray = [
-    (string.match(/A/g) || []).length,
-    (string.match(/K/g) || []).length,
-    (string.match(/Q/g) || []).length,
-    (string.match(/J/g) || []).length,
-    (string.match(/T/g) || []).length,
-    (string.match(/9/g) || []).length,
-    (string.match(/8/g) || []).length,
-    (string.match(/7/g) || []).length,
-    (string.match(/6/g) || []).length,
-    (string.match(/5/g) || []).length,
-    (string.match(/4/g) || []).length,
-    (string.match(/3/g) || []).length,
-    (string.match(/2/g) || []).length,
-  ];
-  for (let i = 0; i < timesArray[0]; i++) {
-    ordered += "A";
-  }
-  for (let i = 0; i < timesArray[1]; i++) {
-    ordered += "K";
-  }
-  for (let i = 0; i < timesArray[2]; i++) {
-    ordered += "Q";
-  }
-  for (let i = 0; i < timesArray[3]; i++) {
-    ordered += "J";
-  }
-  for (let i = 0; i < timesArray[4]; i++) {
-    ordered += "T";
-  }
-  for (let i = 0; i < timesArray[5]; i++) {
-    ordered += "9";
-  }
-  for (let i = 0; i < timesArray[6]; i++) {
-    ordered += "8";
-  }
-  for (let i = 0; i < timesArray[7]; i++) {
-    ordered += "7";
-  }
-  for (let i = 0; i < timesArray[8]; i++) {
-    ordered += "6";
-  }
-  for (let i = 0; i < timesArray[9]; i++) {
-    ordered += "5";
-  }
-  for (let i = 0; i < timesArray[10]; i++) {
-    ordered += "4";
-  }
-  for (let i = 0; i < timesArray[11]; i++) {
-    ordered += "3";
-  }
-  for (let i = 0; i < timesArray[12]; i++) {
-    ordered += "2";
-  }
-
-  if (colors["C"] == 5) {
-    ordered += "F";
-  } else if (colors["H"] == 5) {
-    ordered += "F";
-  } else if (colors["S"] == 5) {
-    ordered += "F";
-  } else if (colors["D"] == 5) {
-    ordered += "F";
-  }
-
-  return ordered;
 }
