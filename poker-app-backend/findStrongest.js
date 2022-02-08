@@ -84,6 +84,7 @@ export default function findStrongest(sevenCards) {
     for (let i = 0; i < everyCardsWithoutBoard.length; i++) {
       console.log("i: " + i);
       for (let j = i + 1; j < everyCardsWithoutBoard.length; j++) {
+        console.log(j)
         for (let k = j + 1; k < everyCardsWithoutBoard.length; k++) {
           for (let l = k + 1; l < everyCardsWithoutBoard.length; l++) {
             for (let m = l + 1; m < everyCardsWithoutBoard.length; m++) {

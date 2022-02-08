@@ -92,6 +92,8 @@ export default function findEnemyStrongest(sevenCards) {
       }
     }
     return result;
+  }else if(inSevenCards.length == 2){
+    return calcPreflopChance(inSevenCardsName)
   }
 }
 
@@ -148,4 +150,25 @@ function findStrongestOfEnemysCards(combi) {
     result.push(strenghtOrder.cardStrenght[ordered]);
   }
   return Math.min(...result);
+}
+
+function calcPreflopChance(cards){
+  let rawdata = fs.readFileSync("PreflopData.json");
+  let chances = JSON.parse(rawdata);
+  let cardCheck;
+  let reversed;
+
+  if(cards[0][1] == cards[1][1]){
+    cardCheck = cards[0][0] + cards[1][0] + 'f';
+    reversed = cards[1][0] + cards[0][0] + 'f'
+  } else {
+    cardCheck = cards[0][0] + cards[1][0]
+    reversed = cards[1][0] + cards[0][0] 
+  }
+
+  if(chances['preflopStrenght'][cardCheck]){
+    return chances['preflopStrenght'][cardCheck]
+  } else {
+    return chances['preflopStrenght'][reversed]
+  }
 }
