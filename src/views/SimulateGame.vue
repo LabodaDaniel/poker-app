@@ -22,6 +22,9 @@
     <div id="chart">
       <ChanceChart :chartData="chartData" :chartOptions="chartOptions" />
     </div>
+    <div class="percent">
+      <p>Your chance is {{ this.percentOfChance }}%</p>
+    </div>
   </div>
 
   <div @click="showColor" v-if="!isHidden">
@@ -117,26 +120,26 @@ export default {
   computed: {
     chartOptions() {
       return {
-          scales: {
-            y: {
-              title: {
-                display: true,
-                text: 'Value'
-              },
+        scales: {
+          y: {
+            title: {
+              display: true,
+              text: "Value",
+            },
             min: 0,
             max: 100,
             ticks: {
               stepSize: 10,
-            }
             },
           },
-          elements: {
+        },
+        elements: {
           point: {
-            radius: 0
+            radius: 0,
           },
           line: {
-            borderWidth: 2
-          }
+            borderWidth: 2,
+          },
         },
         plugins: {
           legend: {
@@ -144,38 +147,37 @@ export default {
               boxWidth: 0,
               font: {
                 fontColor: "#fff",
-                color: "#fff"
+                color: "#fff",
               },
             },
           },
         },
-        
-      }
+      };
     },
     chartData() {
       return {
         labels: this.column.map((x, index) => index + 1),
         datasets: [
           {
-            type: 'bar',
+            type: "bar",
             label: "Enemy's Chance",
             borderColor: "#1161ed",
             borderWidth: 2,
             data: this.enemyCardsFilled,
           },
           {
-            type: 'bar',
+            type: "bar",
             label: "My Chance",
             borderColor: "#f87979",
             borderWidth: 2,
             data: this.myCardsFilled,
           },
           {
-            type: 'line',
+            type: "line",
             label: "Enemy's Avarage",
             borderColor: "rgb(238, 255, 0)",
             borderWidth: 2,
-            data: [50],
+            data: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
           },
           // {
           //   label: "Enemy's Median",
@@ -199,9 +201,8 @@ export default {
           //   data: this.downDev,
           // },
         ],
-      }
+      };
     },
-    
   },
 
   data() {
@@ -215,314 +216,262 @@ export default {
       cards: [
         {
           id: 1,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/2_of_clubs.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/2_of_clubs.png",
           name: "2C",
         },
         {
           id: 2,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/3_of_clubs.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/3_of_clubs.png",
           name: "3C",
         },
         {
           id: 3,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/4_of_clubs.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/4_of_clubs.png",
           name: "4C",
         },
         {
           id: 4,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/5_of_clubs.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/5_of_clubs.png",
           name: "5C",
         },
         {
           id: 5,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/6_of_clubs.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/6_of_clubs.png",
           name: "6C",
         },
         {
           id: 6,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/7_of_clubs.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/7_of_clubs.png",
           name: "7C",
         },
         {
           id: 7,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/8_of_clubs.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/8_of_clubs.png",
           name: "8C",
         },
         {
           id: 8,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/9_of_clubs.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/9_of_clubs.png",
           name: "9C",
         },
         {
           id: 9,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/10_of_clubs.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/10_of_clubs.png",
           name: "TC",
         },
         {
           id: 10,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/jack_of_clubs.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/jack_of_clubs.png",
           name: "JC",
         },
         {
           id: 11,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/queen_of_clubs.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/queen_of_clubs.png",
           name: "QC",
         },
         {
           id: 12,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/king_of_clubs.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/king_of_clubs.png",
           name: "KC",
         },
         {
           id: 13,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/ace_of_clubs.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/ace_of_clubs.png",
           name: "AC",
         },
         {
           id: 14,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/2_of_diamonds.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/2_of_diamonds.png",
           name: "2D",
         },
         {
           id: 15,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/3_of_diamonds.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/3_of_diamonds.png",
           name: "3D",
         },
         {
           id: 16,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/4_of_diamonds.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/4_of_diamonds.png",
           name: "4D",
         },
         {
           id: 17,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/5_of_diamonds.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/5_of_diamonds.png",
           name: "5D",
         },
         {
           id: 18,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/6_of_diamonds.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/6_of_diamonds.png",
           name: "6D",
         },
         {
           id: 19,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/7_of_diamonds.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/7_of_diamonds.png",
           name: "7D",
         },
         {
           id: 20,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/8_of_diamonds.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/8_of_diamonds.png",
           name: "8D",
         },
         {
           id: 21,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/9_of_diamonds.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/9_of_diamonds.png",
           name: "9D",
         },
         {
           id: 22,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/10_of_diamonds.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/10_of_diamonds.png",
           name: "TD",
         },
         {
           id: 23,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/jack_of_diamonds.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/jack_of_diamonds.png",
           name: "JD",
         },
         {
           id: 24,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/queen_of_diamonds.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/queen_of_diamonds.png",
           name: "QD",
         },
         {
           id: 25,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/king_of_diamonds.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/king_of_diamonds.png",
           name: "KD",
         },
         {
           id: 26,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/ace_of_diamonds.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/ace_of_diamonds.png",
           name: "AD",
         },
         {
           id: 27,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/2_of_hearts.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/2_of_hearts.png",
           name: "2H",
         },
         {
           id: 28,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/3_of_hearts.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/3_of_hearts.png",
           name: "3H",
         },
         {
           id: 29,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/4_of_hearts.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/4_of_hearts.png",
           name: "4H",
         },
         {
           id: 30,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/5_of_hearts.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/5_of_hearts.png",
           name: "5H",
         },
         {
           id: 31,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/6_of_hearts.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/6_of_hearts.png",
           name: "6H",
         },
         {
           id: 32,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/7_of_hearts.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/7_of_hearts.png",
           name: "7H",
         },
         {
           id: 33,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/8_of_hearts.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/8_of_hearts.png",
           name: "8H",
         },
         {
           id: 34,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/9_of_hearts.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/9_of_hearts.png",
           name: "9H",
         },
         {
           id: 35,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/10_of_hearts.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/10_of_hearts.png",
           name: "TH",
         },
         {
           id: 36,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/jack_of_hearts.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/jack_of_hearts.png",
           name: "JH",
         },
         {
           id: 37,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/queen_of_hearts.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/queen_of_hearts.png",
           name: "QH",
         },
         {
           id: 38,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/king_of_hearts.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/king_of_hearts.png",
           name: "KH",
         },
         {
           id: 39,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/ace_of_hearts.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/ace_of_hearts.png",
           name: "AH",
         },
         {
           id: 40,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/2_of_spades.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/2_of_spades.png",
           name: "2S",
         },
         {
           id: 41,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/3_of_spades.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/3_of_spades.png",
           name: "3S",
         },
         {
           id: 42,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/4_of_spades.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/4_of_spades.png",
           name: "4S",
         },
         {
           id: 43,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/5_of_spades.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/5_of_spades.png",
           name: "5S",
         },
         {
           id: 44,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/6_of_spades.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/6_of_spades.png",
           name: "6S",
         },
         {
           id: 45,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/7_of_spades.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/7_of_spades.png",
           name: "7S",
         },
         {
           id: 46,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/8_of_spades.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/8_of_spades.png",
           name: "8S",
         },
         {
           id: 47,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/9_of_spades.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/9_of_spades.png",
           name: "9S",
         },
         {
           id: 48,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/10_of_spades.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/10_of_spades.png",
           name: "TS",
         },
         {
           id: 49,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/jack_of_spades.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/jack_of_spades.png",
           name: "JS",
         },
         {
           id: 50,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/queen_of_spades.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/queen_of_spades.png",
           name: "QS",
         },
         {
           id: 51,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/king_of_spades.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/king_of_spades.png",
           name: "KS",
         },
         {
           id: 52,
-          url:
-            "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/ace_of_spades2.png",
+          url: "https://raw.githubusercontent.com/LabodaDaniel/Szakdolgozat/main/Cards/ace_of_spades2.png",
           name: "AS",
         },
       ],
@@ -537,64 +486,63 @@ export default {
       downDev: [],
       upDev: [],
       column: [],
+      percentOfChance: 0,
     };
   },
 
   methods: {
-    chartCalc(){
+    chartCalc() {
       let enemyCards = this.enemysCards;
       let myCards = this.myCards;
-      if(enemyCards.length == 45540){
+      let chance = 0;
+      if (enemyCards.length > 45539) {
         this.column = myCards;
         let start = 0;
-      let end = 990;
-      let chance = 0;
-      let myChance = [];
-      let eChance = [];
-      
-      for(let i=0; i < myCards.length; i++){
-        for(let j=start; j < end; j++){
-          if(enemyCards[j] > myCards[i]){
-            chance = chance+1;
+        let end = 990;
+        let myChance = [];
+        let eChance = [];
+        for (let i = 0; i < myCards.length; i++) {
+          for (let j = start; j < end; j++) {
+            if (enemyCards[j] > myCards[i]) {
+              chance = chance + 1;
+            }
+          }
+          myChance.push((chance / 990) * 100);
+          eChance.push(((990 - chance) / 990) * 100);
+          chance = 0;
+          start += 990;
+          end += 990;
+        }
+        this.enemyCardsFilled = [...eChance];
+        this.myCardsFilled = [...myChance];
+      } else if (enemyCards.length == 990) {
+        this.column = ["123"];
+        this.percentOfChance = (chance / 990) * 100;
+        let myChance = 0;
+        for (let card of enemyCards) {
+          if (card > myCards) {
+            myChance = myChance + 1;
           }
         }
-        myChance.push((chance/990)*100);
-        eChance.push(((990-chance)/990)*100);
-        chance = 0;
-        start+=990;
-        end+=990;
-      }
-      console.log("Enyém: " + myChance);
-      console.log("Enemy: " + eChance);
-      this.enemyCardsFilled = [...eChance];
-      this.myCardsFilled = [...myChance];
-      }else if(enemyCards.length == 990){
-        this.column = ["123"];
-        let myChance = 0;
-      for(let card of enemyCards){
-        if(card > myCards){
-          myChance = myChance+1;
-        }
-      }
-      let myColumn = (myChance/enemyCards.length)*100;
-      let enemyColumn = (100 - myColumn);
-      console.log("Én esélyem: " + myColumn);
-      console.log("Enyemy esélye: " + enemyColumn);
-      this.emnemyCardsFilled = [enemyColumn];
-      this.myCardsFilled = [myColumn];
+        let myColumn = (myChance / enemyCards.length) * 100;
+        let enemyColumn = 100 - myColumn;
+        console.log("Én esélyem: " + myColumn);
+        console.log("Enyemy esélye: " + enemyColumn);
+        this.enemyCardsFilled = [enemyColumn];
+        this.myCardsFilled = [myColumn];
       }
     },
     chartCalcRiver() {
       let enemyCards = this.enemysCards;
       let myCards = this.myCards;
       let myChance = 0;
-      for(let card of enemyCards){
-        if(card > myCards){
-          myChance = myChance+1;
+      for (let card of enemyCards) {
+        if (card > myCards) {
+          myChance = myChance + 1;
         }
       }
-      let myColumn = (myChance/enemyCards.length)*100;
-      let enemyColumn = (100 - myColumn);
+      let myColumn = (myChance / enemyCards.length) * 100;
+      let enemyColumn = 100 - myColumn;
       console.log("Én esélyem: " + myColumn);
       console.log("Enyemy esélye: " + enemyColumn);
       this.emnemyCardsFilled = [enemyColumn];
@@ -603,7 +551,7 @@ export default {
     findMedian(values) {
       if (values.length === 0) throw new Error("No inputs");
 
-      values.sort(function(a, b) {
+      values.sort(function (a, b) {
         return a - b;
       });
 
