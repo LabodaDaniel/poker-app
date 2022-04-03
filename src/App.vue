@@ -8,7 +8,7 @@
 
 import { onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 
 export default {
 

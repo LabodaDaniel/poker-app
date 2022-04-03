@@ -2,27 +2,18 @@
 <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
 <div class="login">
   <h2 class="active"> Login </h2>
-
   <h2 class="nonactive"><router-link to="/register"> Sign up </router-link></h2> 
-  
   <form @submit.prevent="Login">
-
     <input type="text" class="text" name="E-mail" v-model="email">
     <span>E-mail</span>
-
     <br>
-    
     <br>
-
     <input type="password" class="text" name="password" v-model="password">
     <span>password</span>
-    
     <button class="signin" value="Login">
       Sign In
     </button>
-
   </form>
-
 </div>
 </template>
 

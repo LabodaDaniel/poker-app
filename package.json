@@ -35,5 +35,13 @@
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^7.0.0",
     "ip": "^1.1.5"
+  },
+  "vue":{
+    "devServer": {
+      "disableHostCheck": true,
+      "port": 8080,
+      "public": "0.0.0.0:8080"
+  },
+  "publicPath": "/"
   }
 }

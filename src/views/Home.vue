@@ -9,7 +9,7 @@
   
   <div class="flex-child">
     <h2>Az alkalmazás lényege</h2>
-    <p> A Simulate Game fülre kattintva tudod szimulálni a játékot. Figyelned kell, hogy az élő játéknál mi van a kezedben, ezt megadod az oldalon, majd azt is, hogy mi lesz az asztalon flopp-nál, turn-nél, és river-nél. Ezek alapján az oldal megmondja neked, hogy érdemes-e megadnod a hívott tétet, hogy matematikailag nyerd a partyt. FIGYELEM! Az oldal nem képes megmondani, hogy esetleg valaki blöfföl, vagy hogy jobb lapokat kapott a kezébe, mint te. Csak a matematikai esélyeket számolja, ezért nem is fogsz minden partyt megnyerni, viszont minél többet játszol, annál többször fogsz nyerni, azaz, ha a lejátszott partyk száma tart a végtelenben, akkor mindig nyerni fogsz.</p>
+    <p> A Simulate Game fülre kattintva tudod szimulálni a játékot. Figyelned kell, hogy az élő játéknál mi van a kezedben, ezt megadod az oldalon, majd azt is, hogy mi lesz az asztalon flopp-nál, turn-nél, és river-nél. Ezek alapján az oldal kiszámolja a nyerési esélyeidet, valamint más értékeket is, amelyek segítenek meghozni a döntésedet. FIGYELEM! Az oldal nem képes megmondani, hogy esetleg valaki blöfföl, vagy hogy jobb lapokat kapott a kezébe, mint te. Csak a matematikai esélyeket számolja, ezért nem is fogsz minden partyt megnyerni, viszont minél többet játszol, annál többször fogsz nyerni, azaz, ha a lejátszott partyk száma tart a végtelenben, akkor mindig nyerni fogsz.</p>
   </div>
   
 </div>
@@ -17,7 +17,7 @@
 
 <script>
 import { ref, onBeforeMount } from 'vue';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 import Navigation from "../components/Navigation.vue";
 
 export default {

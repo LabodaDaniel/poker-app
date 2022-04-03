@@ -21,9 +21,17 @@
     </div>
     <div id="chart">
       <ChanceChart :chartData="chartData" :chartOptions="chartOptions" />
+      <input type="number" id="emp" v-model="empProb" placeholder="Empirical Probability Over..">
+      <button id="empBut" @click="calcEmp">Submit</button>
+      <p v-if="showEmpResult = true">{{ empProbResult }}</p>
     </div>
-    <div class="percent">
-      <p>Your chance is {{ this.percentOfChance }}%</p>
+    <div class="chance" v-if="showChance">
+        <h1 class="percent">
+            <span class="aqua">You win</span> 
+        </h1>
+        <h1 class="percent">
+            <span class="pink">{{ percentOfChance }} %</span>
+        </h1>
     </div>
   </div>
 
@@ -100,8 +108,8 @@
 
   <PageLoader v-if="8 == 9" />
 
-  <button @click="backend2">Backend2</button>
-  <button @click="backend">Backend</button>
+  <button @click="backendOfEnemyCards">backendOfEnemyCards</button>
+  <button @click="backendOfMyCards">backendOfMyCards</button>
   <button @click="chartCalc">Test</button>
 </template>
 
@@ -159,6 +167,37 @@ export default {
         labels: this.column.map((x, index) => index + 1),
         datasets: [
           {
+            type: "line",
+            label: "Standard Deviation",
+            borderColor: "#fff",
+            borderWidth: 2,
+            pointRadius: 0,
+            data: this.upDev,
+          },
+          {
+            type: "line",
+            label: "Standard Deviation",
+            borderColor: "#fff",
+            borderWidth: 2,
+            pointRadius: 0,
+            data: this.downDev,
+          },
+          {
+            type: "line",
+            label: "Enemy's Avarage",
+            borderColor: "rgb(238, 255, 0)",
+            borderWidth: 2,
+            data: this.avgArray,
+          },
+          {
+            type: "line",
+            label: "Enemy's Median",
+            borderColor: "rgb(255, 0, 191)",
+            borderWidth: 2,
+            pointRadius: 0,
+            data: this.medianArray,
+          },
+          {
             type: "bar",
             label: "Enemy's Chance",
             borderColor: "#1161ed",
@@ -172,34 +211,6 @@ export default {
             borderWidth: 2,
             data: this.myCardsFilled,
           },
-          {
-            type: "line",
-            label: "Enemy's Avarage",
-            borderColor: "rgb(238, 255, 0)",
-            borderWidth: 2,
-            data: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-          },
-          // {
-          //   label: "Enemy's Median",
-          //   borderColor: "rgb(255, 0, 191)",
-          //   borderWidth: 2,
-          //   pointRadius: 0,
-          //   data: this.medianArray,
-          // },
-          // {
-          //   label: "Standard Deviation",
-          //   borderColor: "#fff",
-          //   borderWidth: 2,
-          //   pointRadius: 0,
-          //   data: this.upDev,
-          // },
-          // {
-          //   label: "Standard Deviation",
-          //   borderColor: "#fff",
-          //   borderWidth: 2,
-          //   pointRadius: 0,
-          //   data: this.downDev,
-          // },
         ],
       };
     },
@@ -209,6 +220,7 @@ export default {
     return {
       showPic: false,
       showChart: false,
+      showChance: false,
       isHidden: false,
       choosenColor: "",
       isThere: 0,
@@ -487,16 +499,31 @@ export default {
       upDev: [],
       column: [],
       percentOfChance: 0,
+      showEmpResult: false,
+      empProbResult: 0,
     };
   },
 
   methods: {
+    calcEmp(){
+      let empProb = this.empProb;
+      let allSamples = this.enemyCardsFilled;
+      let over = 0;
+      for(let samp of allSamples){
+        if(samp > empProb){
+          over = over+1;
+        }
+      }
+      let result = over/(allSamples.length);
+      this.showEmpResult = true;
+      this.empProbResult = result;
+    },
     chartCalc() {
       let enemyCards = this.enemysCards;
       let myCards = this.myCards;
       let chance = 0;
       if (enemyCards.length > 45539) {
-        this.column = myCards;
+        
         let start = 0;
         let end = 990;
         let myChance = [];
@@ -515,9 +542,41 @@ export default {
         }
         this.enemyCardsFilled = [...eChance];
         this.myCardsFilled = [...myChance];
+
+        let sum = 0;
+        for(let ch of myChance){
+          sum = sum + ch;
+        }
+        this.percentOfChance = Math.round(sum/myChance.length);
+        this.showChance = true;
+
+        let avgSum = 0;
+        for(let ch of eChance){
+          avgSum = avgSum + ch;
+        }
+        let avg = avgSum/eChance.length;
+        let med = this.findMedian(eChance);
+        let downDev = med - this.calculateDeviation(eChance);
+        let upDev = med + this.calculateDeviation(eChance);
+        let downDevArr = [];
+        let upDevArr = [];
+        let medArr = [];
+        let avgArr = [];
+        for(let i=0; i<eChance.length;i++){
+          avgArr.push(avg);
+          medArr.push(med);
+          downDevArr.push(downDev);
+          upDevArr.push(upDev);
+        }
+        console.log(eChance.length, avgArr.length)
+        this.downDev = [...downDevArr];
+        this.upDev = [...upDevArr];
+        this.avgArray = [...avgArr];
+        this.medianArray = [...medArr];
+
+        this.column = eChance;
       } else if (enemyCards.length == 990) {
         this.column = ["123"];
-        this.percentOfChance = (chance / 990) * 100;
         let myChance = 0;
         for (let card of enemyCards) {
           if (card > myCards) {
@@ -526,27 +585,18 @@ export default {
         }
         let myColumn = (myChance / enemyCards.length) * 100;
         let enemyColumn = 100 - myColumn;
-        console.log("Én esélyem: " + myColumn);
-        console.log("Enyemy esélye: " + enemyColumn);
         this.enemyCardsFilled = [enemyColumn];
         this.myCardsFilled = [myColumn];
+        this.percentOfChance = Math.round([myColumn]);
+
+        
+
+        this.showChance = true;
+      }else if (enemyCards.length == 0){
+        console.log(this.myCards)
+        this.showChance = true;
+        this.percentOfChance = this.myCards;
       }
-    },
-    chartCalcRiver() {
-      let enemyCards = this.enemysCards;
-      let myCards = this.myCards;
-      let myChance = 0;
-      for (let card of enemyCards) {
-        if (card > myCards) {
-          myChance = myChance + 1;
-        }
-      }
-      let myColumn = (myChance / enemyCards.length) * 100;
-      let enemyColumn = 100 - myColumn;
-      console.log("Én esélyem: " + myColumn);
-      console.log("Enyemy esélye: " + enemyColumn);
-      this.emnemyCardsFilled = [enemyColumn];
-      this.myCardsFilled = [myColumn];
     },
     findMedian(values) {
       if (values.length === 0) throw new Error("No inputs");
@@ -593,7 +643,7 @@ export default {
       this.isThere = 9;
       this.isHidden = !this.isHidden;
     },
-    backend(e) {
+    backendOfMyCards(e) {
       e.preventDefault();
       fetch("http://localhost:5000/mystrongest", {
         method: "POST",
@@ -607,7 +657,7 @@ export default {
           console.log(json), (this.myCards = json);
         });
     },
-    backend2(e) {
+    backendOfEnemyCards(e) {
       e.preventDefault();
       fetch("http://localhost:5000/enemystrongest", {
         method: "POST",

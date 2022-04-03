@@ -1,10 +1,10 @@
 <script>
 import { defineComponent } from 'vue'
-import { Line } from 'vue3-chart-v2'
+import { Bar } from 'vue3-chart-v2'
 
 export default defineComponent({
   name: 'ChanceChart',
-  extends: Line,
+  extends: Bar,
   props: {
     chartData: {
       type: Object,
@@ -12,7 +12,7 @@ export default defineComponent({
     },
     chartOptions: {
       type: Object,
-      required: false
+      required: false,
     },
   },
   mounted () {

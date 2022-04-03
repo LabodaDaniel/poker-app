@@ -147,3 +147,68 @@
     width: 100%;
     max-width: 21%;
   }
+
+  .chance {
+    position: absolute;
+    right: 3%;
+    top: 25%;
+    font-family: 'Barlow Condensed', Impact, Arial, sans-serif;
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .percent {
+    font-size: 400%;
+    -webkit-text-fill-color: whitesmoke; 
+    -webkit-text-stroke-width: 0.3px;
+    -webkit-text-stroke-color: rgb(94, 91, 91);
+    text-transform: uppercase;
+    line-height: 60%;
+  }
+
+  .aqua {
+    text-shadow: 2px 2px white, 5px 8px #4082f5;
+  }
+
+  .pink {
+    text-shadow: 2px 2px white, 5px 8px #e35b5a;
+  }
+
+  #emp{
+    box-sizing: border-box;
+    border: none;
+    width: 100%;
+    padding: 10px 20px;
+    display: block;
+    height: 25px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0);
+    overflow: hidden;
+    margin-top: 3px;
+    transition: all 0.5s ease-in-out;
+  }
+
+  #emp::placeholder{
+    color: black;
+    text-align: center;
+  }
+
+  #empBut{
+    background-color: #1161ed;
+    color: #FFF;
+    width: 100%;
+    display: block;
+    height: 25px;
+    border-radius: 20px;
+    margin-top: 5px;
+    transition: all 0.5s ease-in-out;
+    border: none;
+    text-transform: uppercase;
+  }
+
+  #empBut:hover {
+    background: #4082f5;
+    box-shadow: 0px 4px 35px -5px #4082f5;
+    cursor: pointer;
+  }
