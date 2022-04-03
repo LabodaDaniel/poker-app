@@ -59,11 +59,11 @@ const everyCards = [
 
 export default function findEnemyStrongest(sevenCards) {
   let inSevenCards = sevenCards.sevenCards;
-  let inSevenCardsName = getOnlyName(inSevenCards);
-  let inEveryCards = getJustDeck(everyCards, inSevenCardsName)
+  let sevenCardsName = getOnlyName(inSevenCards);
+  let inEveryCards = getJustDeck(everyCards, sevenCardsName)
   let result = [];
   if (inSevenCards.length == 7) {
-    let eCombination = createEnemysPossibleHands(inEveryCards, inSevenCardsName);
+    let eCombination = createEnemysPossibleHands(inEveryCards, sevenCardsName);
     for (const comb of eCombination) {
       result.push(findStrongestOfEnemysCards(comb));
     }
@@ -71,7 +71,7 @@ export default function findEnemyStrongest(sevenCards) {
   } else if (inSevenCards.length == 6) {
     let inEveryCardsWithoutBoard = [...inEveryCards];
     for(let comb of inEveryCards){
-      let turnCombination = createEnemysPossibleHands(removeItemOnce(inEveryCardsWithoutBoard, comb), inSevenCardsName.concat(comb.toString()));
+      let turnCombination = createEnemysPossibleHands(removeItemOnce(inEveryCardsWithoutBoard, comb), sevenCardsName.concat(comb.toString()));
       for(let combi of turnCombination){
         result.push(findStrongestOfEnemysCards(combi));
       }
@@ -84,7 +84,7 @@ export default function findEnemyStrongest(sevenCards) {
       for(let j=i+1;j<inEveryCards.length;j++){
         let remove = removeItemOnce(inEveryCardsWithoutBoard, inEveryCards[i])
         remove = removeItemOnce(inEveryCardsWithoutBoard, inEveryCards[j])
-        let turnCombination = createEnemysPossibleHands(remove, inSevenCardsName.concat(inEveryCards[i], inEveryCards[j]));
+        let turnCombination = createEnemysPossibleHands(remove, sevenCardsName.concat(inEveryCards[i], inEveryCards[j]));
         for(let combi of turnCombination){
           result.push(findStrongestOfEnemysCards(combi));
         }
@@ -92,35 +92,28 @@ export default function findEnemyStrongest(sevenCards) {
       }
     }
     return result;
-  }else if(inSevenCards.length == 2){
-    return calcPreflopChance(inSevenCardsName)
   }
 }
 
 //Megkapja az összes kártyát és a lent lévő kártyákat. Visszaadja az ellenfél lehetséges kombinációit (maradék lap alatt a 2).
-function createEnemysPossibleHands(allCards, inSevenCardsName) {
-  
+function createEnemysPossibleHands(allCards, sevenCardsName) {
   let eCombination = [];
-  let everyCardsRiver = [...allCards];
+  let everyCards = [...allCards];
   let allCombinations = [];
-  let enemyCards = [];
-  for (let comb of G.combination(everyCardsRiver, 2)) {
+  for (let comb of G.combination(everyCards, 2)) {
     allCombinations.push(comb.slice());
   }
   for (let comb of allCombinations) {
-    eCombination.push(comb.concat(inSevenCardsName.slice(2, 7)));
+    eCombination.push(comb.concat(sevenCardsName.slice(2, 7)));
   }
-  for (let comb of eCombination) {
-    enemyCards.push(comb);
-  }
-  return enemyCards;
+  return eCombination;
 }
 
 //Megkap egy tömböt, amiben 7 lap van, legenerálja a 7 alatt az 5-öt(=21).
-function createEnemysCombinations(enemyC) {
+function createEnemysCombinations(enemyComb) {
   let onlyName = [];
   let allCombinations = [];
-  for (let card of enemyC) {
+  for (let card of enemyComb) {
     onlyName.push(card);
   }
   for (let comb of G.combination(onlyName, 5)) {
@@ -150,25 +143,4 @@ function findStrongestOfEnemysCards(combi) {
     result.push(strenghtOrder.cardStrenght[ordered]);
   }
   return Math.min(...result);
-}
-
-function calcPreflopChance(cards){
-  let rawdata = fs.readFileSync("PreflopData.json");
-  let chances = JSON.parse(rawdata);
-  let cardCheck;
-  let reversed;
-
-  if(cards[0][1] == cards[1][1]){
-    cardCheck = cards[0][0] + cards[1][0] + 'f';
-    reversed = cards[1][0] + cards[0][0] + 'f'
-  } else {
-    cardCheck = cards[0][0] + cards[1][0]
-    reversed = cards[1][0] + cards[0][0] 
-  }
-
-  if(chances['preflopStrenght'][cardCheck]){
-    return chances['preflopStrenght'][cardCheck]
-  } else {
-    return chances['preflopStrenght'][reversed]
-  }
 }

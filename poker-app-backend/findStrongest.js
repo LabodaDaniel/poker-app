@@ -78,45 +78,7 @@ export default function findStrongest(sevenCards) {
     }
     return flopCombinationsValue;
   } else if (onylNameOfSevenCards.length == 2) {
-    let rawdata = fs.readFileSync("data.json");
-    let strenghtOrder = JSON.parse(rawdata);
-    let preflopCombinationsValue = [];
-    for (let i = 0; i < everyCardsWithoutBoard.length; i++) {
-      console.log("i: " + i);
-      for (let j = i + 1; j < everyCardsWithoutBoard.length; j++) {
-        console.log(j)
-        for (let k = j + 1; k < everyCardsWithoutBoard.length; k++) {
-          for (let l = k + 1; l < everyCardsWithoutBoard.length; l++) {
-            for (let m = l + 1; m < everyCardsWithoutBoard.length; m++) {
-              let preflopResult = [];
-              let combinations = createCombinations(
-                onylNameOfSevenCards.concat(
-                  everyCardsWithoutBoard[i],
-                  everyCardsWithoutBoard[j],
-                  everyCardsWithoutBoard[k],
-                  everyCardsWithoutBoard[l],
-                  everyCardsWithoutBoard[m]
-                )
-              );
-              for (let combination of combinations) {
-                let nameString = "";
-                let colors = { C: 0, S: 0, H: 0, D: 0 };
-                for (let card of combination) {
-                  nameString += card[0];
-                  colors[card[1]] += 1;
-                }
-                let preflopOrdered = sortCardOrder(nameString, colors);
-                preflopResult.push(strenghtOrder.cardStrenght[preflopOrdered]);
-              }
-              preflopCombinationsValue.push(Math.min(...preflopResult));
-              // preflopCombinationsValue.push(createStrongest(combinations))
-            }
-          }
-        }
-      }
-    }
-    console.log(preflopCombinationsValue.length);
-    return preflopCombinationsValue;
+    return calcPreflopChance(onylNameOfSevenCards)
   }
 }
 
@@ -145,4 +107,25 @@ function createStrongest(combinations){
     result.push(strenghtOrder.cardStrenght[ordered]);
   }
   return Math.min(...result);
+}
+
+function calcPreflopChance(cards){
+  let rawdata = fs.readFileSync("PreflopData.json");
+  let chances = JSON.parse(rawdata);
+  let cardCheck;
+  let reversed;
+
+  if(cards[0][1] == cards[1][1]){
+    cardCheck = cards[0][0] + cards[1][0] + 'f';
+    reversed = cards[1][0] + cards[0][0] + 'f'
+  } else {
+    cardCheck = cards[0][0] + cards[1][0]
+    reversed = cards[1][0] + cards[0][0] 
+  }
+
+  if(chances['preflopStrenght'][cardCheck]){
+    return chances['preflopStrenght'][cardCheck]
+  } else {
+    return chances['preflopStrenght'][reversed]
+  }
 }

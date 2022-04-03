@@ -20,8 +20,6 @@ export function sortCardOrder(string, colors){
     } else if(colors['D'] == 5){
       ordered+='F'
     }
-  
-  
     return ordered.split('').sort().join('');
 }
 
